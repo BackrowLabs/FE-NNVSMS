@@ -363,7 +363,7 @@ function ErrorBox({ message }: { message: string }) {
   )
 }
 
-function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+function Modal({ title, onClose: _onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">

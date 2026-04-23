@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { attendanceApi } from '../../api/attendanceApi'
 import { studentApi } from '../../api/studentApi'
-import type { AttendanceStatus } from '../../types/attendance'
+import type { AttendanceStatus, StudentAttendance } from '../../types/attendance'
 
 const STATUSES: AttendanceStatus[] = ['PRESENT', 'ABSENT', 'LATE', 'HALF_DAY']
 
@@ -31,16 +31,19 @@ export default function StudentAttendancePage() {
     enabled: !!sectionId && !!academicYearId,
   })
 
-  const { data: existing } = useQuery({
+  const { data: existingData } = useQuery({
     queryKey: ['attendance', sectionId, date],
     queryFn: () => attendanceApi.getBySectionAndDate(sectionId!, date),
     enabled: !!sectionId,
-    onSuccess: (data) => {
+  })
+
+  useEffect(() => {
+    if (existingData) {
       const map: typeof entries = {}
-      data.forEach(a => { map[a.studentId] = { status: a.status, remarks: a.remarks ?? '' } })
+      existingData.forEach((a: StudentAttendance) => { map[a.studentId] = { status: a.status, remarks: a.remarks ?? '' } })
       setEntries(map)
-    },
-  } as any)
+    }
+  }, [existingData])
 
   const save = useMutation({
     mutationFn: () => attendanceApi.saveBulk({

@@ -16,7 +16,7 @@ interface GradeEntry {
 }
 
 export default function GradesPage() {
-  const { role } = useAuthStore()
+  const { role: _role } = useAuthStore()
   const qc = useQueryClient()
 
   const [academicYearId, setAcademicYearId] = useState<number | ''>('')
